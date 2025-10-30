@@ -315,6 +315,26 @@ The tool checks environment variables in this order:
 2. AWS standard: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`
 3. CLI parameters override environment variables
 
+## Quick Start with Open Source Cloud
+
+This service is available in [Open Source Cloud](https://app.osaas.io/browse/eyevinn-audio-qc) for instant usage without local setup:
+
+```bash
+# Set your OSC access token
+export OSC_ACCESS_TOKEN="your-osc-token"
+
+# Simple analysis of a media file
+npx @osaas/cli create eyevinn-audio-qc my-job \
+  -o cmdLineArgs="analyze https://example.com/video.mxf --verbose --json"
+
+# Analysis with S3 upload to MinIO
+npx @osaas/cli create eyevinn-audio-qc my-job \
+  -o cmdLineArgs="analyze https://example.com/video.mxf --verbose --json --s3-bucket reports" \
+  -o s3EndpointUrl="https://your-minio.example.com" \
+  -o s3AccessKeyId="your-access-key" \
+  -o s3SecretAccessKey="your-secret-key"
+```
+
 ## Docker Usage
 
 ### Building the Container
