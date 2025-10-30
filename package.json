@@ -1,0 +1,64 @@
+{
+  "name": "audio-qc",
+  "version": "1.0.0",
+  "description": "CLI and library for checking EBU R128 compliance of audio files with S3 upload support",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "audio-qc": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "test": "jest",
+    "prepublishOnly": "npm run build",
+    "docker:build": "./docker-build.sh",
+    "docker:run": "docker run --rm -v $(pwd):/usercontent eyevinn/audio-qc"
+  },
+  "keywords": [
+    "audio",
+    "ebu",
+    "r128",
+    "loudness",
+    "quality-control",
+    "s3",
+    "ffmpeg"
+  ],
+  "author": "Eyevinn Technology AB",
+  "license": "MIT",
+  "homepage": "https://github.com/Eyevinn/audio-qc",
+  "bugs": {
+    "url": "https://github.com/Eyevinn/audio-qc/issues"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.450.0",
+    "@aws-sdk/s3-request-presigner": "^3.450.0",
+    "commander": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eyevinn/audio-qc.git"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ]
+}

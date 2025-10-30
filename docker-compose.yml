@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  audio-qc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eyevinn/audio-qc:latest
+    volumes:
+      - ./test-files:/usercontent:ro
+    environment:
+      # S3 Configuration (uncomment and configure as needed)
+      # S3_ENDPOINT: http://minio:9000
+      # S3_ACCESS_KEY_ID: your-access-key
+      # S3_SECRET_ACCESS_KEY: your-secret-key
+      # S3_REGION: us-east-1
+      # S3_BUCKET: audio-reports
+      # S3_FORCE_PATH_STYLE: "true"
+      
+      # Application configuration
+      NODE_ENV: production
+    command: ["analyze", "/usercontent/sample.wav", "--verbose"]
+    
+  # Optional: MinIO for local S3 testing
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+    
+  # Example: Audio QC with MinIO integration
+  audio-qc-minio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eyevinn/audio-qc:latest
+    depends_on:
+      - minio
+    volumes:
+      - ./test-files:/usercontent:ro
+    environment:
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY_ID: admin
+      S3_SECRET_ACCESS_KEY: password123
+      S3_REGION: us-east-1
+      S3_BUCKET: audio-reports
+      S3_FORCE_PATH_STYLE: "true"
+      NODE_ENV: production
+    command: [
+      "analyze", 
+      "/usercontent/sample.wav", 
+      "--verbose", 
+      "--s3-bucket", "audio-reports"
+    ]
+
+volumes:
+  minio-data:
