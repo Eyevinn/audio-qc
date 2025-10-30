@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: eyevinn/audio-qc:latest
+    image: eyevinntechnology/audio-qc:latest
     volumes:
       - ./test-files:/usercontent:ro
     environment:
@@ -39,7 +39,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: eyevinn/audio-qc:latest
+    image: eyevinntechnology/audio-qc:latest
     depends_on:
       - minio
     volumes:

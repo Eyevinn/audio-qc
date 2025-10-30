@@ -6,7 +6,7 @@
 set -e
 
 # Default values
-IMAGE_NAME="eyevinn/audio-qc"
+IMAGE_NAME="eyevinntechnology/audio-qc"
 TAG="latest"
 PLATFORM=""
 PUSH=false

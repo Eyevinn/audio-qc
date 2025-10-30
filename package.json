@@ -17,7 +17,7 @@
     "prepublishOnly": "npm run build",
     "postversion": "git push && git push --tags",
     "docker:build": "./docker-build.sh",
-    "docker:run": "docker run --rm -v $(pwd):/usercontent eyevinn/audio-qc"
+    "docker:run": "docker run --rm -v $(pwd):/usercontent eyevinntechnology/audio-qc"
   },
   "keywords": [
     "audio",

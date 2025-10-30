@@ -25,7 +25,7 @@ npm install -g audio-qc
 ### Local Installation (Library)
 
 ```bash
-npm install @eyevinn/audio-qc
+npm install @eyevinntechnology/audio-qc
 ```
 
 ## Requirements
@@ -124,7 +124,7 @@ audio-qc analyze "https://bucket.s3.amazonaws.com/XDCAM_file.mxf?X-Amz-..." --au
 ### Basic Analysis
 
 ```typescript
-import { AudioQC } from '@eyevinn/audio-qc';
+import { AudioQC } from '@eyevinntechnology/audio-qc';
 
 const audioQC = new AudioQC();
 const result = await audioQC.analyze({
@@ -138,7 +138,7 @@ console.log(`Integrated Loudness: ${result.metrics.integratedLoudness} LUFS`);
 ### With S3 Upload
 
 ```typescript
-import { AudioQC } from '@eyevinn/audio-qc';
+import { AudioQC } from '@eyevinntechnology/audio-qc';
 
 const result = await AudioQC.analyzeFile('audio.wav');
 
@@ -169,7 +169,7 @@ await audioQC.analyze({
 ### Custom Standards
 
 ```typescript
-import { AudioQC, EBU_R128_MUSIC_STANDARDS } from '@eyevinn/audio-qc';
+import { AudioQC, EBU_R128_MUSIC_STANDARDS } from '@eyevinntechnology/audio-qc';
 
 const audioQC = new AudioQC(EBU_R128_MUSIC_STANDARDS);
 const result = await audioQC.analyze({
@@ -180,7 +180,7 @@ const result = await audioQC.analyze({
 ### Video Container Support
 
 ```typescript
-import { AudioQC, ContainerDetector } from '@eyevinn/audio-qc';
+import { AudioQC, ContainerDetector } from '@eyevinntechnology/audio-qc';
 
 // Check if file is a video container
 const isVideo = ContainerDetector.isVideoContainer('video.mp4');
@@ -200,7 +200,7 @@ const result = await AudioQC.analyzeFile('video.mp4', undefined, 1); // Use audi
 ### S3 Input Support
 
 ```typescript
-import { AudioQC, S3Downloader, StreamingAnalyzer } from '@eyevinn/audio-qc';
+import { AudioQC, S3Downloader, StreamingAnalyzer } from '@eyevinntechnology/audio-qc';
 
 // Check if input is an S3 URL
 const isS3 = S3Downloader.isS3Url('s3://bucket/file.wav');
@@ -231,7 +231,7 @@ const localPath = await S3Downloader.downloadFileStatic('s3://bucket/file.wav');
 ### Format Report
 
 ```typescript
-import { ComplianceChecker } from '@eyevinn/audio-qc';
+import { ComplianceChecker } from '@eyevinntechnology/audio-qc';
 
 const report = ComplianceChecker.formatReport(result);
 console.log(report);
@@ -334,23 +334,23 @@ The tool checks environment variables in this order:
 
 ```bash
 # Basic usage - analyze local audio file
-docker run --rm -v $(pwd):/usercontent eyevinn/audio-qc analyze /usercontent/audio.wav --verbose
+docker run --rm -v $(pwd):/usercontent eyevinntechnology/audio-qc analyze /usercontent/audio.wav --verbose
 
 # Analyze video file and save report
-docker run --rm -v $(pwd):/usercontent eyevinn/audio-qc \
+docker run --rm -v $(pwd):/usercontent eyevinntechnology/audio-qc \
   analyze /usercontent/video.mp4 --output /usercontent/report.json
 
 # Analyze file from S3 URL
 docker run --rm -v $(pwd):/usercontent \
   -e S3_ACCESS_KEY_ID=your-key -e S3_SECRET_ACCESS_KEY=your-secret \
-  eyevinn/audio-qc analyze s3://bucket/audio.wav --verbose
+  eyevinntechnology/audio-qc analyze s3://bucket/audio.wav --verbose
 
 # Analyze presigned S3 URL (no credentials needed)
-docker run --rm -v $(pwd):/usercontent eyevinn/audio-qc \
+docker run --rm -v $(pwd):/usercontent eyevinntechnology/audio-qc \
   analyze "https://bucket.s3.amazonaws.com/video.mxf?X-Amz-Signature=..." --verbose
 
 # List audio streams in video
-docker run --rm -v $(pwd):/usercontent eyevinn/audio-qc \
+docker run --rm -v $(pwd):/usercontent eyevinntechnology/audio-qc \
   analyze /usercontent/video.mp4 --list-streams
 
 # Upload results to S3
@@ -358,7 +358,7 @@ docker run --rm -v $(pwd):/usercontent \
   -e S3_ACCESS_KEY_ID=your-key \
   -e S3_SECRET_ACCESS_KEY=your-secret \
   -e S3_BUCKET=reports-bucket \
-  eyevinn/audio-qc analyze /usercontent/audio.wav --s3-bucket reports-bucket
+  eyevinntechnology/audio-qc analyze /usercontent/audio.wav --s3-bucket reports-bucket
 
 # Use with MinIO
 docker run --rm -v $(pwd):/usercontent \
@@ -366,7 +366,7 @@ docker run --rm -v $(pwd):/usercontent \
   -e S3_ACCESS_KEY_ID=minio-key \
   -e S3_SECRET_ACCESS_KEY=minio-secret \
   -e S3_FORCE_PATH_STYLE=true \
-  eyevinn/audio-qc analyze /usercontent/audio.wav --s3-bucket my-bucket
+  eyevinntechnology/audio-qc analyze /usercontent/audio.wav --s3-bucket my-bucket
 ```
 
 ### Docker Compose
