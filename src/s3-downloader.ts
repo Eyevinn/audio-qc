@@ -50,6 +50,17 @@ export class S3Downloader {
         clientConfig.forcePathStyle = this.options.forcePathStyle;
       }
 
+      // For custom endpoints (like MinIO), we need to ensure proper SSL handling
+      if (this.options.endpoint) {
+        // Force path style for custom endpoints to avoid subdomain issues
+        clientConfig.forcePathStyle = true;
+        
+        // Ensure we're using the correct TLS settings for HTTPS endpoints
+        if (this.options.endpoint.startsWith('https://')) {
+          clientConfig.tls = true;
+        }
+      }
+
       if (this.options.accessKeyId && this.options.secretAccessKey) {
         clientConfig.credentials = {
           accessKeyId: this.options.accessKeyId,
