@@ -6,6 +6,7 @@ CLI and library for checking EBU R128 compliance of audio files with S3 upload s
 
 - **EBU R128 Compliance Checking**: Analyze audio files for loudness, dynamic range, and true peak compliance
 - **Video Container Support**: Extract and analyze audio from MP4, MOV, MXF, AVI, MKV and other video formats
+- **HTTP(S) Streaming**: Stream analysis directly from URLs without downloading (MP4, MXF, MOV, TS)
 - **Multiple Audio Streams**: Detect and select specific audio streams in multi-stream containers
 - **Multiple Standards**: Support for both broadcast and music content standards
 - **S3 Integration**: Upload compliance reports directly to Amazon S3 or MinIO
@@ -199,20 +200,27 @@ const result = await AudioQC.analyzeFile('video.mp4', undefined, 1); // Use audi
 ### S3 Input Support
 
 ```typescript
-import { AudioQC, S3Downloader } from 'audio-qc';
+import { AudioQC, S3Downloader, StreamingAnalyzer } from 'audio-qc';
 
 // Check if input is an S3 URL
 const isS3 = S3Downloader.isS3Url('s3://bucket/file.wav');
 
-// Analyze file from S3 URL (automatically downloads and cleans up)
+// Check streaming capability for a format
+const capability = StreamingAnalyzer.getStreamingCapability('https://bucket.s3.amazonaws.com/video.mp4');
+console.log(`Can stream: ${capability.canStream}, Format: ${capability.format}`);
+
+// Analyze file from S3 URL (automatically streams if possible, falls back to download)
 const result = await AudioQC.analyzeFile('s3://my-bucket/audio.wav');
 
-// Analyze video from presigned S3 URL
+// Analyze video from presigned S3 URL (will stream MP4/MXF/MOV automatically)
 const videoResult = await AudioQC.analyzeFile(
   'https://bucket.s3.amazonaws.com/video.mp4?X-Amz-Signature=...',
   undefined, // use default standards
   1 // audio stream index
 );
+
+// Manual streaming analysis
+const streamingResult = await StreamingAnalyzer.analyzeFileFromUrl('https://example.com/video.mp4');
 
 // Manual download (if needed for custom processing)
 const localPath = await S3Downloader.downloadFileStatic('s3://bucket/file.wav');
@@ -228,6 +236,26 @@ import { ComplianceChecker } from 'audio-qc';
 const report = ComplianceChecker.formatReport(result);
 console.log(report);
 ```
+
+## Streaming vs Download
+
+The tool automatically determines whether to stream or download based on:
+
+### Streamable Formats (High Efficiency)
+- **MP4, MOV, M4V** - Excellent streaming support
+- **TS, M2TS** - Designed for streaming
+- **WebM** - Good streaming support
+- **MXF** - Good streaming for most variants
+
+### Download-Required Formats
+- **AVI** - Index usually at end of file
+- **FLV** - Metadata at end
+- **WMV, RM, RMVB** - Poor streaming support
+
+### Performance Benefits
+- **Streaming**: Faster analysis, no temporary files, lower bandwidth
+- **Automatic Fallback**: Downloads if streaming fails
+- **Smart Detection**: Tests streaming capability before attempting
 
 ## EBU R128 Standards
 

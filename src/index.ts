@@ -2,6 +2,7 @@ import { FFmpegAnalyzer } from './ffmpeg-analyzer';
 import { ComplianceChecker } from './compliance-checker';
 import { S3Uploader } from './s3-uploader';
 import { S3Downloader } from './s3-downloader';
+import { StreamingAnalyzer } from './streaming-analyzer';
 import { ContainerDetector } from './container-detector';
 import { AudioQCOptions, EBUComplianceResult, EBUStandards } from './types';
 import { EBU_R128_STANDARDS, EBU_R128_MUSIC_STANDARDS } from './ebu-standards';
@@ -22,19 +23,62 @@ export class AudioQC {
 
     // Check if input is an S3 URL
     if (S3Downloader.isS3Url(inputFile)) {
+      // Try streaming first for supported formats
+      const streamingCapability = StreamingAnalyzer.getStreamingCapability(inputFile);
+      
       if (verbose) {
-        console.log(`Detected S3 URL, downloading: ${inputFile}`);
+        console.log(`Detected S3 URL: ${inputFile}`);
+        console.log(`Format: ${streamingCapability.format}, Streaming capability: ${streamingCapability.canStream ? 'Yes' : 'No'} (${streamingCapability.confidence})`);
       }
       
-      try {
-        localFilePath = await S3Downloader.downloadFileStatic(inputFile);
-        isTemporaryFile = true;
-        
+      if (streamingCapability.canStream) {
         if (verbose) {
-          console.log(`Downloaded to temporary file: ${localFilePath}`);
+          console.log('Attempting streaming analysis...');
         }
-      } catch (error) {
-        throw new Error(`Failed to download S3 file: ${error}`);
+        
+        try {
+          // Test if streaming works for this specific URL
+          const canActuallyStream = await StreamingAnalyzer.testStreamingCapability(inputFile);
+          
+          if (canActuallyStream) {
+            if (verbose) {
+              console.log('Streaming test successful, proceeding with streaming analysis');
+            }
+            localFilePath = inputFile; // Use URL directly
+          } else {
+            throw new Error('Streaming test failed');
+          }
+        } catch (streamingError) {
+          if (verbose) {
+            console.log(`Streaming failed (${streamingError}), falling back to download`);
+          }
+          
+          try {
+            localFilePath = await S3Downloader.downloadFileStatic(inputFile);
+            isTemporaryFile = true;
+            
+            if (verbose) {
+              console.log(`Downloaded to temporary file: ${localFilePath}`);
+            }
+          } catch (error) {
+            throw new Error(`Both streaming and download failed: Streaming: ${streamingError}, Download: ${error}`);
+          }
+        }
+      } else {
+        if (verbose) {
+          console.log(`Format not suitable for streaming${streamingCapability.fallbackReason ? ': ' + streamingCapability.fallbackReason : ''}, downloading file`);
+        }
+        
+        try {
+          localFilePath = await S3Downloader.downloadFileStatic(inputFile);
+          isTemporaryFile = true;
+          
+          if (verbose) {
+            console.log(`Downloaded to temporary file: ${localFilePath}`);
+          }
+        } catch (error) {
+          throw new Error(`Failed to download S3 file: ${error}`);
+        }
       }
     } else if (!fs.existsSync(inputFile)) {
       throw new Error(`Input file does not exist: ${inputFile}`);
@@ -55,7 +99,14 @@ export class AudioQC {
         }
       }
       
-      const audioStreams = await FFmpegAnalyzer.getAudioStreams(localFilePath);
+      let audioStreams;
+      if (S3Downloader.isS3Url(inputFile) && localFilePath === inputFile) {
+        // Using streaming
+        audioStreams = await StreamingAnalyzer.getAudioStreamsFromUrl(localFilePath);
+      } else {
+        // Using local file
+        audioStreams = await FFmpegAnalyzer.getAudioStreams(localFilePath);
+      }
       if (audioStreams.length === 0) {
         if (isTemporaryFile) {
           try { fs.unlinkSync(localFilePath); } catch (e) {}
@@ -76,7 +127,13 @@ export class AudioQC {
     let result;
     
     try {
-      metrics = await FFmpegAnalyzer.analyzeFile(localFilePath, audioStreamIndex);
+      if (S3Downloader.isS3Url(inputFile) && localFilePath === inputFile) {
+        // Using streaming
+        metrics = await StreamingAnalyzer.analyzeFileFromUrl(localFilePath, audioStreamIndex);
+      } else {
+        // Using local file
+        metrics = await FFmpegAnalyzer.analyzeFile(localFilePath, audioStreamIndex);
+      }
     
 
       if (verbose) {
@@ -150,6 +207,7 @@ export * from './ffmpeg-analyzer';
 export * from './compliance-checker';
 export * from './s3-uploader';
 export * from './s3-downloader';
+export * from './streaming-analyzer';
 export * from './container-detector';
 
 export { AudioQC as default };
