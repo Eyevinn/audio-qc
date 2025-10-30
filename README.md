@@ -2,6 +2,35 @@
 
 CLI and library for checking EBU R128 compliance of audio files with S3 upload support.
 
+## 🚀 Quick Start with Open Source Cloud
+
+**Get started instantly without any setup!** This service is available in [Open Source Cloud](https://app.osaas.io/browse/eyevinn-audio-qc) - no need to install dependencies, configure Docker, or manage infrastructure.
+
+```bash
+# Set your OSC access token
+export OSC_ACCESS_TOKEN="your-osc-token"
+
+# Simple analysis of a media file
+npx @osaas/cli create eyevinn-audio-qc my-job \
+  -o cmdLineArgs="analyze https://example.com/video.mxf --verbose --json"
+
+# Analysis with S3 upload to MinIO
+npx @osaas/cli create eyevinn-audio-qc my-job \
+  -o cmdLineArgs="analyze https://example.com/video.mxf --verbose --json --s3-bucket reports" \
+  -o s3EndpointUrl="https://your-minio.example.com" \
+  -o s3AccessKeyId="your-access-key" \
+  -o s3SecretAccessKey="your-secret-key"
+```
+
+✨ **Benefits of Open Source Cloud:**
+- No local setup required - ready to use immediately
+- Pre-configured with FFmpeg and all dependencies
+- Scalable cloud infrastructure
+- Pay-per-use pricing
+- Perfect for testing, prototyping, or production workloads
+
+[**👉 Try it now at app.osaas.io**](https://app.osaas.io/browse/eyevinn-audio-qc)
+
 ## Features
 
 - **EBU R128 Compliance Checking**: Analyze audio files for loudness, dynamic range, and true peak compliance
@@ -315,25 +344,6 @@ The tool checks environment variables in this order:
 2. AWS standard: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`
 3. CLI parameters override environment variables
 
-## Quick Start with Open Source Cloud
-
-This service is available in [Open Source Cloud](https://app.osaas.io/browse/eyevinn-audio-qc) for instant usage without local setup:
-
-```bash
-# Set your OSC access token
-export OSC_ACCESS_TOKEN="your-osc-token"
-
-# Simple analysis of a media file
-npx @osaas/cli create eyevinn-audio-qc my-job \
-  -o cmdLineArgs="analyze https://example.com/video.mxf --verbose --json"
-
-# Analysis with S3 upload to MinIO
-npx @osaas/cli create eyevinn-audio-qc my-job \
-  -o cmdLineArgs="analyze https://example.com/video.mxf --verbose --json --s3-bucket reports" \
-  -o s3EndpointUrl="https://your-minio.example.com" \
-  -o s3AccessKeyId="your-access-key" \
-  -o s3SecretAccessKey="your-secret-key"
-```
 
 ## Docker Usage
 
