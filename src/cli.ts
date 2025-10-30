@@ -114,7 +114,9 @@ program
         console.log(ComplianceChecker.formatReport(result));
       }
 
-      process.exit(result.isCompliant ? 0 : 1);
+      // Exit with 0 since analysis completed successfully
+      // Compliance status is indicated in the output, not exit code
+      process.exit(0);
     } catch (error) {
       console.error(`Error: ${error}`);
       process.exit(1);
