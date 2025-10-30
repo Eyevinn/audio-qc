@@ -19,13 +19,13 @@ CLI and library for checking EBU R128 compliance of audio files with S3 upload s
 ### Global Installation (CLI)
 
 ```bash
-npm install -g audio-qc
+npm install -g @eyevinn/audio-qc
 ```
 
 ### Local Installation (Library)
 
 ```bash
-npm install @eyevinntechnology/audio-qc
+npm install @eyevinn/audio-qc
 ```
 
 ## Requirements
@@ -124,7 +124,7 @@ audio-qc analyze "https://bucket.s3.amazonaws.com/XDCAM_file.mxf?X-Amz-..." --au
 ### Basic Analysis
 
 ```typescript
-import { AudioQC } from '@eyevinntechnology/audio-qc';
+import { AudioQC } from '@eyevinn/audio-qc';
 
 const audioQC = new AudioQC();
 const result = await audioQC.analyze({
@@ -138,7 +138,7 @@ console.log(`Integrated Loudness: ${result.metrics.integratedLoudness} LUFS`);
 ### With S3 Upload
 
 ```typescript
-import { AudioQC } from '@eyevinntechnology/audio-qc';
+import { AudioQC } from '@eyevinn/audio-qc';
 
 const result = await AudioQC.analyzeFile('audio.wav');
 
@@ -169,7 +169,7 @@ await audioQC.analyze({
 ### Custom Standards
 
 ```typescript
-import { AudioQC, EBU_R128_MUSIC_STANDARDS } from '@eyevinntechnology/audio-qc';
+import { AudioQC, EBU_R128_MUSIC_STANDARDS } from '@eyevinn/audio-qc';
 
 const audioQC = new AudioQC(EBU_R128_MUSIC_STANDARDS);
 const result = await audioQC.analyze({
@@ -180,7 +180,7 @@ const result = await audioQC.analyze({
 ### Video Container Support
 
 ```typescript
-import { AudioQC, ContainerDetector } from '@eyevinntechnology/audio-qc';
+import { AudioQC, ContainerDetector } from '@eyevinn/audio-qc';
 
 // Check if file is a video container
 const isVideo = ContainerDetector.isVideoContainer('video.mp4');
@@ -200,7 +200,7 @@ const result = await AudioQC.analyzeFile('video.mp4', undefined, 1); // Use audi
 ### S3 Input Support
 
 ```typescript
-import { AudioQC, S3Downloader, StreamingAnalyzer } from '@eyevinntechnology/audio-qc';
+import { AudioQC, S3Downloader, StreamingAnalyzer } from '@eyevinn/audio-qc';
 
 // Check if input is an S3 URL
 const isS3 = S3Downloader.isS3Url('s3://bucket/file.wav');
@@ -231,7 +231,7 @@ const localPath = await S3Downloader.downloadFileStatic('s3://bucket/file.wav');
 ### Format Report
 
 ```typescript
-import { ComplianceChecker } from '@eyevinntechnology/audio-qc';
+import { ComplianceChecker } from '@eyevinn/audio-qc';
 
 const report = ComplianceChecker.formatReport(result);
 console.log(report);
