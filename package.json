@@ -1,5 +1,5 @@
 {
-  "name": "audio-qc",
+  "name": "@eyevinn/audio-qc",
   "version": "1.0.0",
   "description": "CLI and library for checking EBU R128 compliance of audio files with S3 upload support",
   "main": "dist/index.js",
