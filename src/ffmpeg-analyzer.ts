@@ -11,22 +11,19 @@ export class FFmpegAnalyzer {
     let shortTermMax = 0;
 
     for (const line of lines) {
-      if (line.includes('Integrated loudness:')) {
+      // Parse FFmpeg loudnorm output format
+      if (line.includes('Input Integrated:')) {
         const match = line.match(/(-?\d+\.?\d*)\s*LUFS/);
         if (match) integratedLoudness = parseFloat(match[1]);
-      } else if (line.includes('Loudness range:')) {
+      } else if (line.includes('Input LRA:')) {
         const match = line.match(/(\d+\.?\d*)\s*LU/);
         if (match) loudnessRange = parseFloat(match[1]);
-      } else if (line.includes('True peak:')) {
+      } else if (line.includes('Input True Peak:')) {
         const match = line.match(/(-?\d+\.?\d*)\s*dBTP/);
         if (match) truePeakMax = parseFloat(match[1]);
-      } else if (line.includes('Momentary max:')) {
-        const match = line.match(/(-?\d+\.?\d*)\s*LUFS/);
-        if (match) momentaryMax = parseFloat(match[1]);
-      } else if (line.includes('Short-term max:')) {
-        const match = line.match(/(-?\d+\.?\d*)\s*LUFS/);
-        if (match) shortTermMax = parseFloat(match[1]);
       }
+      // Note: FFmpeg loudnorm doesn't provide momentary/short-term max values
+      // These would need a different analysis method (ebur128 filter)
     }
 
     return {
