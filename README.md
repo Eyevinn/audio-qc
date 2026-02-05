@@ -2,34 +2,18 @@
 
 CLI and library for checking EBU R128 compliance of audio files with S3 upload support.
 
-## 🚀 Quick Start with Open Source Cloud
+---
+<div align="center">
 
-**Get started instantly without any setup!** This service is available in [Open Source Cloud](https://app.osaas.io/browse/eyevinn-audio-qc) - no need to install dependencies, configure Docker, or manage infrastructure.
+## Quick Demo: Open Source Cloud
 
-```bash
-# Set your OSC access token
-export OSC_ACCESS_TOKEN="your-osc-token"
+Run this service in the cloud with a single click.
 
-# Simple analysis of a media file
-npx @osaas/cli create eyevinn-audio-qc my-job \
-  -o cmdLineArgs="analyze https://example.com/video.mxf --verbose --json"
+[![Badge OSC](https://img.shields.io/badge/Try%20it%20out!-1E3A8A?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTIiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl8yODIxXzMxNjcyKSIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI3IiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl8yODIxXzMxNjcyIiB4MT0iMTIiIHkxPSIwIiB4Mj0iMTIiIHkyPSIyNCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjQzE4M0ZGIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzREQzlGRiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=)](https://app.osaas.io/browse/eyevinn-audio-qc)
 
-# Analysis with S3 upload to MinIO
-npx @osaas/cli create eyevinn-audio-qc my-job \
-  -o cmdLineArgs="analyze https://example.com/video.mxf --verbose --json --s3-bucket reports" \
-  -o s3EndpointUrl="https://your-minio.example.com" \
-  -o s3AccessKeyId="your-access-key" \
-  -o s3SecretAccessKey="your-secret-key"
-```
+</div>
 
-✨ **Benefits of Open Source Cloud:**
-- No local setup required - ready to use immediately
-- Pre-configured with FFmpeg and all dependencies
-- Scalable cloud infrastructure
-- Pay-per-use pricing
-- Perfect for testing, prototyping, or production workloads
-
-[**👉 Try it now at app.osaas.io**](https://app.osaas.io/browse/eyevinn-audio-qc)
+---
 
 ## Features
 
