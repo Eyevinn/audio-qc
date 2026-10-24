@@ -1,5 +1,5 @@
 # Multi-stage build for audio-qc
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 
 # Set working directory
 WORKDIR /source
@@ -18,12 +18,10 @@ COPY src/ ./src/
 RUN npm run build
 
 # Runtime stage
-FROM alpine:3.19
+FROM node:24-alpine
 
 # Install runtime dependencies
 RUN apk --no-cache add \
-    nodejs \
-    npm \
     ffmpeg \
     && adduser --disabled-password --gecos '' audioqc
 
